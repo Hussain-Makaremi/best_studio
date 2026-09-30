@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "ritwickdey.LiveServer",
+    "bradlc.vscode-tailwindcss",
+    "dbaeumer.vscode-eslint",
+    "stylelint.vscode-stylelint",
+    "html-validate.vscode-html-validate",
+    "editorconfig.editorconfig"
+  ]
+}

@@ -1,0 +1,317 @@
+/*
+  Single Tailwind entry. Output: static/assets/css/app.css (built by CLI, never edit by hand).
+  Sources are declared explicitly so the built CSS is never scanned as input.
+*/
+@import "tailwindcss" source(none);
+
+/* Fonts: generated from static/fonts/* by scripts/copy-fonts.mjs */
+@import "./generated/fonts.css";
+
+@source "../../";
+@source not "../../static";
+@source not "../../release";
+@source not "../../node_modules";
+@source not "../../scripts";
+@source not "../../.github";
+
+/* ---------- Raw design tokens (swap per project; light + dark designed together) ---------- */
+:root {
+  color-scheme: light dark;
+
+  --bg: #fff;
+  --surface: #f4f6f8;
+  --surface-2: #e9edf1;
+  --ink: #101418;
+  --ink-muted: #4a5560;
+  --line: #ccd3da;
+  --brand: #1d4ed8;
+  --brand-ink: #fff;
+  --brand-soft: #e6edfd;
+  --danger: #b42318;
+  --danger-soft: #fdeceb;
+  --success: #0b6b3a;
+  --success-soft: #e4f5ec;
+  --focus: #1d4ed8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface-2: #1f262e;
+    --ink: #e6edf3;
+    --ink-muted: #a3b0bd;
+    --line: #38414b;
+    --brand: #7aa2ff;
+    --brand-ink: #0d1117;
+    --brand-soft: #16233f;
+    --danger: #ff8a80;
+    --danger-soft: #3a1a18;
+    --success: #6fd39b;
+    --success-soft: #12301f;
+    --focus: #9db9ff;
+  }
+}
+
+/* ---------- Tailwind theme (semantic names only; components never use raw hex) ---------- */
+@theme inline {
+  --font-sans: "IRANYekanX", "Vazirmatn", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--ink-muted);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+
+  --radius-control: 0.625rem;
+  --radius-card: 1rem;
+
+  --shadow-raised: 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 16px rgb(0 0 0 / 0.08);
+
+  --container-page: 72rem;
+
+  --z-base: 0;
+  --z-sticky: 40;
+  --z-overlay: 100;
+  --z-toast: 1000;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
+}
+
+/* ---------- Base ---------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-block-start: 5rem;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-block-size: 100dvh;
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.8; /* Persian needs more leading than Latin (1.5) */
+    text-rendering: optimizeLegibility;
+  }
+
+  :lang(en) {
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    line-height: 1.4;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 0.25rem;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+
+  [x-cloak] {
+    display: none !important;
+  }
+
+  /* No-JS fallback: mobile menu stays reachable when Alpine cannot run */
+  @media (scripting: none) {
+    #site-menu {
+      display: block !important;
+    }
+
+    [aria-controls="site-menu"] {
+      display: none !important;
+    }
+  }
+
+  ::selection {
+    background: var(--brand);
+    color: var(--brand-ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ---------- Components (keep <= 12; everything else is utilities in HTML) ---------- */
+@layer components {
+  .container-page {
+    inline-size: 100%;
+    max-inline-size: var(--container-page);
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  @media (width >= 48rem) {
+    .container-page {
+      padding-inline: 2rem;
+    }
+  }
+
+  .skip-link {
+    position: absolute;
+    inset-inline-start: 1rem;
+    inset-block-start: -4rem;
+    z-index: var(--z-toast);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-control);
+    background: var(--color-brand);
+    color: var(--color-brand-ink);
+    font-weight: 600;
+    text-decoration: none;
+    transition: inset-block-start var(--duration-fast) var(--ease-out-soft);
+  }
+
+  .skip-link:focus {
+    inset-block-start: 1rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-block-size: 2.75rem; /* 44px touch target */
+    min-inline-size: 2.75rem;
+    padding: 0.5rem 1.25rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-control);
+    font-weight: 600;
+    line-height: 1.4;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-out-soft),
+      border-color var(--duration-fast) var(--ease-out-soft),
+      color var(--duration-fast) var(--ease-out-soft);
+  }
+
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    background: var(--color-brand);
+    color: var(--color-brand-ink);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: color-mix(in oklab, var(--color-brand) 88%, var(--color-ink));
+  }
+
+  .btn-secondary {
+    border-color: var(--color-line);
+    background: var(--color-surface);
+    color: var(--color-ink);
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--color-surface-2);
+  }
+
+  .card {
+    padding: 1.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+  }
+
+  .field-label {
+    display: block;
+    margin-block-end: 0.375rem;
+    font-weight: 600;
+  }
+
+  .field-control {
+    inline-size: 100%;
+    min-block-size: 2.75rem;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-control);
+    background: var(--color-bg);
+    color: var(--color-ink);
+  }
+
+  .field-control[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+
+  .field-hint {
+    margin-block-start: 0.375rem;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+  }
+
+  .field-error {
+    margin-block-start: 0.375rem;
+    color: var(--color-danger);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-control);
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  .nav-link:hover {
+    background: var(--color-surface);
+  }
+
+  .nav-link[aria-current="page"] {
+    color: var(--color-brand);
+    font-weight: 700;
+  }
+
+  .link {
+    color: var(--color-brand);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+}

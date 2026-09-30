@@ -1,0 +1,51 @@
+{
+  "name": "best-studio-starter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Front-only static site starter: HTML + Tailwind CSS + Alpine.js, CLI build, no backend, no runtime external dependencies.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n css,js \"npm:dev:css\" \"npm:dev:js\"",
+    "dev:css": "tailwindcss -i src/css/input.css -o static/assets/css/app.css --watch",
+    "dev:js": "esbuild src/js/app.js --bundle --format=iife --target=es2020 --sourcemap --outfile=static/assets/js/app.js --watch",
+    "build": "npm run build:fonts && npm run build:css && npm run build:js && npm run sync && npm run stamp && npm run sitemap",
+    "build:fonts": "node scripts/copy-fonts.mjs",
+    "build:css": "tailwindcss -i src/css/input.css -o static/assets/css/app.css --minify",
+    "build:js": "esbuild src/js/app.js --bundle --minify --legal-comments=none --format=iife --target=es2020 --outfile=static/assets/js/app.js",
+    "sync": "node scripts/sync-partials.mjs",
+    "stamp": "node scripts/stamp-assets.mjs",
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "images": "node scripts/optimize-images.mjs",
+    "lint": "npm run lint:html && npm run lint:css && npm run lint:js && npm run lint:rules",
+    "lint:html": "node scripts/lint-html.mjs",
+    "lint:css": "stylelint \"src/**/*.css\"",
+    "lint:js": "eslint src scripts",
+    "lint:rules": "node scripts/sync-partials.mjs --check && node scripts/check-rules.mjs",
+    "check": "npm run build && npm run lint",
+    "audit": "lhci autorun",
+    "package": "node scripts/package-release.mjs",
+    "serve": "node scripts/serve.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@alpinejs/csp": "^3.17.4",
+    "@eslint/js": "^10.0.1",
+    "@lhci/cli": "^0.15.1",
+    "@tailwindcss/cli": "^4.3.3",
+    "archiver": "^8.0.0",
+    "concurrently": "^10.0.5",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.11.0",
+    "globals": "^17.12.0",
+    "html-validate": "^11.16.1",
+    "parse5": "^8.0.1",
+    "sharp": "^0.35.5",
+    "stylelint": "^17.15.0",
+    "stylelint-config-standard": "^40.0.0",
+    "tailwindcss": "^4.3.3",
+    "vazirmatn": "^33.0.3"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "extends": [
+    "stylelint-config-standard"
+  ],
+  "rules": {
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "theme",
+          "source",
+          "utility",
+          "variant",
+          "custom-variant",
+          "apply",
+          "config",
+          "plugin",
+          "reference"
+        ]
+      }
+    ],
+    "import-notation": null,
+    "custom-property-pattern": null,
+    "selector-class-pattern": null,
+    "declaration-no-important": null,
+    "property-no-vendor-prefix": null,
+    "value-no-vendor-prefix": null,
+    "no-descending-specificity": null,
+    "value-keyword-case": [
+      "lower",
+      {
+        "camelCaseSvgKeywords": true,
+        "ignoreKeywords": [
+          "Tahoma",
+          "Menlo",
+          "Consolas",
+          "optimizeLegibility"
+        ],
+        "ignoreProperties": [
+          "font-family",
+          "/^--font/"
+        ]
+      }
+    ],
+    "custom-property-empty-line-before": null,
+    "alpha-value-notation": "number"
+  },
+  "ignoreFiles": [
+    "src/css/generated/**"
+  ]
+}

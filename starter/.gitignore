@@ -1,0 +1,7 @@
+node_modules/
+release/
+.lighthouseci/
+*.log
+.DS_Store
+Thumbs.db
+static/assets/js/app.js.map

@@ -1,0 +1,17 @@
+<header class="sticky top-0 z-(--z-sticky) border-b border-line bg-bg" x-data="siteNav" @keydown.escape.window="close">
+  <div class="container-page flex flex-wrap items-center justify-between gap-4 py-3">
+    <a href="/" class="flex items-center gap-3 font-bold text-ink no-underline">
+      <img src="/static/images/favicon.svg" alt="" width="32" height="32" loading="eager">
+      <span>نام برند</span>
+    </a>
+    <button type="button" class="btn btn-secondary md:hidden" x-ref="toggle" @click="toggle" :aria-expanded="expanded" aria-controls="site-menu">
+      منو
+    </button>
+    <nav aria-label="ناوبری اصلی" id="site-menu" class="hidden w-full data-[open=true]:block md:block md:w-auto" :data-open="expanded">
+      <ul class="flex flex-col gap-1 py-2 md:flex-row md:items-center md:gap-2 md:py-0">
+        <li><a data-nav href="/" class="nav-link">خانه</a></li>
+        <li><a data-nav href="/styleguide/" class="nav-link">راهنمای استایل</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>

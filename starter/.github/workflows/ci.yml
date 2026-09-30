@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # only used to commit rebuilt assets on main
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # sitemap <lastmod> uses git history
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build (fonts, Tailwind, JS, partials, cache-bust, sitemap)
+        run: npm run build
+
+      - name: Lint (html-validate, stylelint, eslint, project rules)
+        run: npm run lint
+
+      # Pull requests: built files must already be committed (server deploys need no Node).
+      - name: Verify built assets are committed
+        if: github.event_name == 'pull_request'
+        run: |
+          git add -N .
+          # sitemap <lastmod> depends on the commit being built, so it is refreshed on main instead
+          if ! git diff --quiet -- . ':!sitemap.xml'; then
+            echo "::error::Built files are stale. Run 'npm run build' locally and commit the result."
+            git --no-pager diff --stat
+            exit 1
+          fi
+
+      # main: commit rebuilt files automatically ([skip ci] prevents a loop).
+      - name: Commit rebuilt files
+        if: github.event_name == 'push'
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore(build): update built assets [skip ci]"
+            git push
+          fi
+
+      - name: Package release for DirectAdmin
+        run: npm run package
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-${{ github.sha }}
+          path: release/site.zip
+          if-no-files-found: error
+          retention-days: 30
+
+  lighthouse:
+    needs: build-and-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Lighthouse CI (Core Web Vitals, a11y, SEO budgets)
+        run: npm run audit
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-${{ github.sha }}
+          path: .lighthouseci
+          retention-days: 14

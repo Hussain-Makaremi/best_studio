@@ -1,0 +1,21 @@
+{
+  "liveServer.settings.root": "/",
+  "liveServer.settings.file": "index.html",
+  "liveServer.settings.NoBrowser": false,
+  "liveServer.settings.ignoreFiles": [
+    ".vscode/**",
+    "node_modules/**",
+    "release/**",
+    "scripts/**",
+    "src/**"
+  ],
+  "files.eol": "\n",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.formatOnSave": false,
+  "html.format.wrapLineLength": 0,
+  "css.lint.unknownAtRules": "ignore",
+  "tailwindCSS.experimental.configFile": "src/css/input.css",
+  "files.associations": { "*.css": "tailwindcss" },
+  "emmet.includeLanguages": { "html": "html" }
+}
